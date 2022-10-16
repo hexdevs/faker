@@ -42,6 +42,47 @@ class TestDeterminism < Test::Unit::TestCase
     threads.each(&:join)
   end
 
+  def test_locale_setting
+    # if locale is not set, fallback to :en
+    assert_equal :en, Faker::Config.locale
+
+    # locale can be updated initially
+    # and it becomes the default value
+    # for new threads
+    Faker::Config.locale = :pt
+
+    assert_equal :pt, Faker::Config.locale
+
+    t1 = Thread.new do
+      # child thread has initial locale equal to
+      # latest locale set on main thread
+      # instead of the fallback value
+      assert_equal :pt, Faker::Config.locale
+      refute_equal :en, Faker::Config.locale
+
+      # child thread can set its own locale
+      Faker::Config.locale = :es
+      assert_equal :es, Faker::Config.locale
+    end
+
+    t1.join
+
+    # child thread won't change locale of other threads
+    assert_equal :pt, Faker::Config.locale
+
+    t2 = Thread.new do
+      # initial default locale is copied over to new thread
+      assert_equal :pt, Faker::Config.locale
+
+      Faker::Config.locale = :it
+      assert_equal :it, Faker::Config.locale
+    end
+
+    t2.join
+
+    assert_equal :pt, Faker::Config.locale
+  end
+
   private
 
   def deterministic_random?(first, method_name)

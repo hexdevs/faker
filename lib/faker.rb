@@ -14,12 +14,17 @@ module Faker
   module Config
     class << self
       def locale=(new_locale)
+        if new_locale == @fallback_locale
+          @inital_locale = nil
+        else
+          @inital_locale ||= new_locale
+        end
+
         Thread.current[:faker_config_locale] = new_locale
       end
 
       def locale
-        # Because I18n.locale defaults to :en, if we don't have :en in our available_locales, errors will happen
-        Thread.current[:faker_config_locale] || (I18n.available_locales.include?(I18n.locale) ? I18n.locale : I18n.available_locales.first)
+        Thread.current[:faker_config_locale] ||= @inital_locale
       end
 
       def own_locale
@@ -32,6 +37,16 @@ module Faker
 
       def random
         Thread.current[:faker_config_random] || Random
+      end
+
+      def setup!
+        @fallback_locale = if I18n.available_locales.include?(I18n.locale)
+                             I18n.locale
+                           else
+                             I18n.available_locales.first
+                           end
+
+        self.locale = @fallback_locale
       end
     end
   end
@@ -265,3 +280,5 @@ end
 
 # require faker objects
 Dir.glob(File.join(mydir, 'faker', '/**/*.rb')).sort.each { |file| require file }
+
+Faker::Config.setup!
