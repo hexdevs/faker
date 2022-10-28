@@ -8,6 +8,7 @@ We love pull requests. Here's a quick guide:
     * Ways to run RuboCop:
         - `bundle exec rubocop`
         - `bundle exec rake` would run the test suite and after that it runs the Ruby static code analyzer.
+        - Can also set-up pre-push hook which executes `bundle exec rake` before every push to prevent test or rubocop failure on CI - Refer pre-push hook set-up section for set-up
 
 4. Please add a test for your change. Only refactoring and documentation changes require no new tests. If you are adding functionality or fixing a bug, we need a test! We use [Minitest](https://github.com/seattlerb/minitest) in this project.
 
@@ -105,3 +106,9 @@ a_things:
 * Use `bundle exec yard server -r` to launch the YARD Doc server
 
 [YARD]: (https://www.rubydoc.info/gems/yard/file/README.md)
+
+### pre-push hook set-up.
+* Add the file `pre-push.sample` to your `.git/hooks` folder without `.sample` extension.
+* For Linux and MacOS - provide permission to the file using command `chmod +x .git/hooks/pre-push` (not required for Windows)
+* To skip this hook for any push. use `--no-verify` example: `git push --no-verify <remote_name> <branch_name>`
+* To disable this hook completely: remove the file `.git/hooks/pre-push`
