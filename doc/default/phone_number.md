@@ -1,5 +1,9 @@
 # `Faker::PhoneNumber`
 
+TODO:
+- [ ] Update all locales with the country_code
+- [ ] Update docs with the changes introduced here
+
 ### `.phone_number`
 
 This formatter will return one of the following formats:
@@ -21,7 +25,6 @@ This formatter will return one of the following formats:
 
   * 333-333-3333
   * (333) 333-3333
-  * 1-333-333-3333
   * 333.333.3333
 
 ### `.cell_phone_in_e164`
@@ -31,10 +34,21 @@ This formatter will return one of the following formats:
   * +33333333333333
   * +3333333333333
 
-## Locale
-By setting the locale, you can generate a phone number with a valid area code in that locale (and valid exchange code, where relevant).
+## Locales
+
+By setting the locale, you can generate a phone number with area code in that locale (and valid exchange code, where relevant).
+
+To seed a database with only US style numbers, set the locale to:
+
+```ruby
+Faker::Config.locale = 'en-US'
+
+Faker::PhoneNumber.country_code #=> "+1"
+
+```
 
 ### Locales with area codes
+
 ```Faker::Config.locale = 'en-US'
 Faker::Config.locale = 'en-CA'
 Faker::Config.locale = 'fr-CA'
@@ -43,6 +57,7 @@ Faker::Config.locale = 'pt-BR'
 ```
 
 ### Locales with exchange codes
+
 ```Faker::Config.locale = 'en-US'
 Faker::Config.locale = 'en-CA'
 Faker::Config.locale = 'fr-CA'

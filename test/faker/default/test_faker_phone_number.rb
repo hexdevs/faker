@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../../test_helper'
+require 'phonelib'
 
 class TestFakerPhone < Test::Unit::TestCase
   def setup
@@ -21,6 +22,11 @@ class TestFakerPhone < Test::Unit::TestCase
   end
 
   def test_cell_phone_in_e164
-    assert_match @phone_with_country_code_regex, @tester.cell_phone_in_e164
+   100.times do
+      result = @tester.cell_phone_in_e164
+      p Phonelib.valid? result
+      assert_equal(12, @tester.cell_phone_in_e164.length)
+      assert_match @phone_with_country_code_regex, @tester.cell_phone_in_e164
+   end
   end
 end
