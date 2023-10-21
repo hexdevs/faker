@@ -80,8 +80,8 @@ en-GB:
       default_country_code: ["GB"]
     internet:
       domain_suffix: [co.uk, com, biz, info, name]
-    country_code: ["44"]
     phone_number:
+      country_code: ["44"]
       formats:
         [
           "01#### #####",
